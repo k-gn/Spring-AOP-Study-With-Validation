@@ -30,6 +30,6 @@ public class UserRepository {
 
     public void update(UpdateReqDto updateReqDto, int id) {
         System.out.println("DB - UPDATE");
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("수정 실패");
     }
 }

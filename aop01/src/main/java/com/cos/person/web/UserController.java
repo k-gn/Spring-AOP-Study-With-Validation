@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController // 데이터를 리턴할 API Controller
 @RequiredArgsConstructor
 public class UserController {
 
