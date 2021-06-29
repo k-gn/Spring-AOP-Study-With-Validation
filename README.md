@@ -1,2 +1,2 @@
 # SpringAOP
-📚스프링 AOP 공부📝
+📚스프링 AOP, Validation 공부📝
