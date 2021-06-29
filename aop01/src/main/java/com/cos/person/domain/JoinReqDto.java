@@ -10,7 +10,7 @@ import lombok.Data;
 public class JoinReqDto {
 
 	// 리플렉션 기반으로 동작한다.
-	@NotNull(message = "유저네임 키값이 없습니다.")
+//	@NotNull(message = "유저네임 키값이 없습니다.")
 	@NotBlank(message = "유저네임을 입력하세요.")
 	@Size(max = 20, message = "유저네임 길이를 초과하였습니다.")
 	private String username;
