@@ -4,11 +4,15 @@ import com.cos.person.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
-@RestController // 데이터를 리턴할 API Controller
+@RestController // 데이터를 리턴할 API Controller, file 리턴 시 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
@@ -34,8 +38,18 @@ public class UserController {
     @PostMapping("/user")
     // x-www-form-urlencoded => request.getParameter() (기본값 - 그냥 받을 수 있음)
     // text/plain, application/json => @RequestBody
-    public ResponseEntity<CommonDto<String>> save(@RequestBody JoinReqDto joinReqDto) {
+    // <?> : 응답할 때 정하겠다는 의미
+    public ResponseEntity<CommonDto<?>> save(@RequestBody @Valid JoinReqDto joinReqDto, BindingResult bindingResult) {
         System.out.println("save : " + joinReqDto);
+//        if(bindingResult.hasErrors()) {
+//            var errorMap = new HashMap<>(); // var : 타입추론
+//
+//            for(FieldError error : bindingResult.getFieldErrors()) {
+//                errorMap.put(error.getField(), error.getDefaultMessage());
+//            }
+//
+//            return new ResponseEntity<>(new CommonDto<>(HttpStatus.BAD_REQUEST.value(), errorMap), HttpStatus.BAD_REQUEST);
+//        }
         userRepository.save(joinReqDto);
         return new ResponseEntity<>(new CommonDto<>(HttpStatus.OK.value(), "OK"), HttpStatus.OK);
     }
@@ -48,8 +62,17 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<CommonDto> update(@RequestBody UpdateReqDto updateReqDto, @PathVariable int id) {
+    public ResponseEntity<CommonDto> update(@RequestBody @Valid UpdateReqDto updateReqDto, BindingResult bindingResult, @PathVariable int id) {
         System.out.println("update");
+//        if(bindingResult.hasErrors()) {
+//            var errorMap = new HashMap<>(); // var : 타입추론
+//
+//            for(FieldError error : bindingResult.getFieldErrors()) {
+//                errorMap.put(error.getField(), error.getDefaultMessage());
+//            }
+//
+//            return new ResponseEntity<>(new CommonDto<>(HttpStatus.BAD_REQUEST.value(), errorMap), HttpStatus.BAD_REQUEST);
+//        }
         userRepository.update(updateReqDto, id);
         return new ResponseEntity<>(new CommonDto<>(HttpStatus.OK.value()), HttpStatus.OK);
     }
