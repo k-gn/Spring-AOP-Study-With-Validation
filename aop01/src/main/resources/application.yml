@@ -2,7 +2,7 @@ server:
   port: 8080
   servlet:
     context-path: /
-d
+
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
