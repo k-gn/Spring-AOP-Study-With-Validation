@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -33,14 +34,13 @@ import com.cos.person.domain.CommonDto;
 @Aspect // 이 클래스가 Aspect를 나타내는 클래스라는 것을 명시
 public class BindingAdvice {
 
-
 	private static final Logger log = LoggerFactory.getLogger(BindingAdvice.class);
 
 	// 접근제한자 리턴타입 패키지경로.클래스명.메소드명(인자값 ...)
 	@Pointcut("execution(* com.cos.person.web..*Controller.*(..))") // .. : 해당 패키지 및 하위 패키지에 적용
 	public void pointcut(){}
 
-	// 어떤함수가 언제 몇번 실행됐는지 횟수같은거 로그 남기기
+	// 어떤함수가 언제 몇번 실행됐는지 횟수같은거 로그 남기기 등
 	@Before("pointcut()")
 	public void testCheck() {
 		// request 값 처리는 못하나요? 아래처럼 쓰면 됨!
@@ -54,6 +54,15 @@ public class BindingAdvice {
 	@After("pointcut()")
 	public void testCheck2() {
 		System.out.println("후처리 로그를 남겼습니다.");
+	}
+
+	// JoinPoint : 메소드 정보
+	@AfterReturning(pointcut = "pointcut()", returning = "result")
+	public void testCheck3(JoinPoint joinPoint, ResponseEntity<CommonDto<?>> result) {
+		System.out.println(joinPoint);
+		System.out.println("AfterReturning");
+		System.out.println(result.getBody().getStatusCode());
+		result.getBody().setStatusCode(100);
 	}
 
 	// 함수 : 앞 뒤
@@ -88,8 +97,10 @@ public class BindingAdvice {
 						log.warn(type+"."+method+"() => 필드 : "+error.getField()+", 메시지 : "+error.getDefaultMessage());
 						log.debug(type+"."+method+"() => 필드 : "+error.getField()+", 메시지 : "+error.getDefaultMessage());
 
-						//DB연결 -> DB남기기
-						//File file = new File();
+						// 로그 남기는 법
+						// 1. DB연결 -> DB남기기
+						// 2. File file = new File(); (비추)
+						// 3. logback-spring.xml
 					}
 
 					// 해당 메소드의 리턴타입으로 해줘야한다. 안 그러면 casting 에러가 발생 (즉, 알아서 맞는 리턴타입으로 casting 처리된다.)
