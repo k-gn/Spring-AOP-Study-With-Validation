@@ -43,7 +43,7 @@ public class BindingAdvice {
 	// 어떤함수가 언제 몇번 실행됐는지 횟수같은거 로그 남기기
 	@Before("pointcut()")
 	public void testCheck() {
-		//request 값 처리 못하나요?
+		// request 값 처리는 못하나요? 아래처럼 쓰면 됨!
 		HttpServletRequest request =
 				((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		System.out.println("주소 : "+request.getRequestURI());
@@ -64,6 +64,7 @@ public class BindingAdvice {
 	//@After
 	@Around("pointcut()") // ProceedingJoinPoint : 메소드 정보
 	public Object validCheck(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		// Object 로 리턴타입을 지정해야한다.
 		// 리플렉션 기반
 		String type = proceedingJoinPoint.getSignature().getDeclaringTypeName();
 		String method = proceedingJoinPoint.getSignature().getName();
@@ -91,8 +92,7 @@ public class BindingAdvice {
 						//File file = new File();
 					}
 
-					// 해당 메소드의 리턴타입으로 해줘야한다.
-//					return new CommonDto<>(HttpStatus.BAD_REQUEST.value(), errorMap);
+					// 해당 메소드의 리턴타입으로 해줘야한다. 안 그러면 casting 에러가 발생 (즉, 알아서 맞는 리턴타입으로 casting 처리된다.)
 					return new ResponseEntity<>(new CommonDto<>(HttpStatus.BAD_REQUEST.value(), errorMap), HttpStatus.BAD_REQUEST);
 				}
 			}
