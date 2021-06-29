@@ -30,6 +30,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
+    // sentry: 통신 네트워크 방식으로 로깅하기
+    implementation 'io.sentry:sentry-spring-boot-starter:5.0.1'
+
 }
 
 test {

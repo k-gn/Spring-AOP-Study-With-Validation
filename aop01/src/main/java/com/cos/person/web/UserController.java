@@ -77,5 +77,3 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto<>(HttpStatus.OK.value()), HttpStatus.OK);
     }
 }
-
-

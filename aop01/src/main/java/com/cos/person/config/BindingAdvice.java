@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.sentry.Sentry;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -93,14 +94,16 @@ public class BindingAdvice {
 
 					for(FieldError error : bindingResult.getFieldErrors()) {
 						errorMap.put(error.getField(), error.getDefaultMessage());
-						// 로그 레벨 error, warn, info, debug
+						// 로그 레벨 순서 error, warn, info, debug
 						log.warn(type+"."+method+"() => 필드 : "+error.getField()+", 메시지 : "+error.getDefaultMessage());
 						log.debug(type+"."+method+"() => 필드 : "+error.getField()+", 메시지 : "+error.getDefaultMessage());
-
+						// sentry 사용해서 로그 남기기 (로그백 파일에 설정할 수도 있다.)
+						Sentry.captureMessage(type+"."+method+"() => 필드 : "+error.getField()+", 메시지 : "+error.getDefaultMessage());
 						// 로그 남기는 법
-						// 1. DB연결 -> DB남기기
+						// 1. DB연결 -> DB남기기 (추천)
 						// 2. File file = new File(); (비추)
 						// 3. logback-spring.xml
+						// 4. sentry 같은 네트워크 통신으로 남기기
 					}
 
 					// 해당 메소드의 리턴타입으로 해줘야한다. 안 그러면 casting 에러가 발생 (즉, 알아서 맞는 리턴타입으로 casting 처리된다.)
